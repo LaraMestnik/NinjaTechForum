@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %} Log In | Ninja Tech Forum {% endblock title %}
+
+{% block content %}
+
+    <div class="form-content">
+        <h1 class="mb-4 text-left">Log In</h1>
+
+        <form method="post">
+            <input type="text" name="username" placeholder="Enter your username" required>
+            <input type="password" name="password" placeholder="Enter your password" required>
+            <button>Log In</button>
+        </form>
+    </div>
+
+
+{% endblock content %}

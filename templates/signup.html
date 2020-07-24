@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Signup | Ninja Tech Forum {% endblock title %}
+
+
+{% block content %}
+
+    <div class="form-content">
+        <h1 class="mb-5">Signup for Ninja Tech Forum</h1>
+
+        <form method="post">
+            <input type="text" name="username" placeholder="Enter a username" required><br>
+            <input type="password" name="password" placeholder="Enter a password" required><br>
+            <input type="password" name="repeat" placeholder="Repeat the password" required><br>
+
+            <button>Submit</button>
+        </form>
+    </div>
+
+{% endblock content %}
