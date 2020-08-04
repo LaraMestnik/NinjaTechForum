@@ -5,13 +5,32 @@
 {% block content %}
 
     <div class="homepg-content">
-        {% if user %}
-            <h1>Welcome to Ninja Tech Forum, {{user.username}}!</h1>
-        {% else %}
-            <h1>Welcome to Ninja Tech Forum, stranger!</h1>
-        {% endif %}
 
-        <img src="static/img/logo.png" alt="logo">
+        <div class="greeting">
+            {% if user %}
+                <h1>Welcome to Ninja Tech Forum, {{user.username}}!</h1>
+            {% else %}
+                <h1>Welcome to Ninja Tech Forum, stranger!</h1>
+            {% endif %}
+
+            <img src="static/img/logo.png" alt="logo">
+        </div>
+
+        <table class="mt-5">
+            <tr>
+                <th>Topic</th>
+                <th>Author</th>
+                <th>Date created</th>
+            </tr>
+            {% for topic in topics %}
+            <tr>
+                <td><a href="/topic/{{ topic.id }}">{{ topic.title }}</a></td>
+                <td>{{ topic.author.username }}</td>
+                <td>{{ topic.created }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
     </div>
 
 {% endblock content %}

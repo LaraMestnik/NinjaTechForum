@@ -1,8 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, make_response
-from models.settings import db
-from models.user import User
 import hashlib
 import uuid
+
+from models.settings import db
+from models.user import User
+from models.topic import Topic
 
 app = Flask(__name__)
 db.create_all()
@@ -12,7 +14,10 @@ db.create_all()
 def index():
     session_token = request.cookies.get("session_token")
     user = db.query(User).filter_by(session_token=session_token).first()
-    return render_template('index.html', user=user)
+
+    topics = db.query(Topic).all()
+
+    return render_template('index.html', user=user, topics=topics)
 
 
 @app.route("/signup", methods=["GET", "POST"])
@@ -65,6 +70,33 @@ def login():
                 return response
             else:
                 return 'Your password is incorrect!'
+
+
+@app.route('/create-topic', methods=['GET', 'POST'])
+def topic_create():
+    if request.method == 'GET':
+        return render_template('topic_create.html')
+
+    elif request.method == 'POST':
+        title = request.form.get('title')
+        text = request.form.get('text')
+
+        session_token = request.cookies.get('session_token')
+        user = db.query(User).filter_by(session_token=session_token).first()
+
+        if not user:
+            return redirect(url_for('login '))
+
+        topic = Topic.create(title=title, text=text, author=user)
+
+        return redirect(url_for('index'))
+
+
+@app.route('/topic/<topic_id>', methods=['GET'])
+def topic_details(topic_id):
+    topic = db.query(Topic).get(int(topic_id))
+
+    return render_template('topic_details.html', topic=topic)
 
 
 if __name__ == '__main__':

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %} {{ topic.title }} {% endblock title %}
+
+
+{% block content %}
+
+    <h1>{{ topic.title }}</h1>
+
+    <small>Posted by {{ topic.author.username }}</small> on {{ topic.created.strftime('%d %b %Y')}}
+
+    <p> {{ topic.text }}</p>
+
+{% endblock content %}

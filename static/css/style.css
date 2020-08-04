@@ -48,6 +48,11 @@ nav{
     border-radius: 3px;
 }
 
+.form-content form textarea{
+    width: 100%;
+    padding:10px;
+}
+
 .form-content form button{
     width: 100%;
     border: none;
@@ -74,4 +79,8 @@ nav{
 .homepg-content img{
     width: 260px;
     margin-top: 10%;
+}
+
+.greeting{
+    text-align: center;
 }
