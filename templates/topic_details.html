@@ -5,10 +5,25 @@
 
 {% block content %}
 
-    <h1>{{ topic.title }}</h1>
 
-    <small>Posted by {{ topic.author.username }}</small> on {{ topic.created.strftime('%d %b %Y')}}
+    <div class="topic-content">
+        <div class="topic-title">
+            <h1>{{ topic.title }}</h1>
+        </div>
 
-    <p> {{ topic.text }}</p>
+        <div class="topic-author-date">
+            <small>Posted by {{ topic.author.username }} on {{ topic.created.strftime('%d %b %Y')}}</small>
+        </div>
 
+        <div class="mt-4">
+            <p> {{ topic.text }}</p>
+        </div>
+    </div>
+
+    <div class="topic-btns mt-3">
+        {% if user.id == topic.author.id %}
+            <a class="btn-edit mr-3" href="/topic/{{ topic.id }}/edit">Edit</a>
+            <a class="btn-delete" href="/topic/{{ topic.id }}/delete">Delete</a>
+        {% endif %}
+    </div>
 {% endblock content %}
