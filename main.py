@@ -6,8 +6,13 @@ from models.settings import db
 from models.user import User
 from models.topic import Topic
 
+import os
+import smartninja_redis
+
 app = Flask(__name__)
 db.create_all()
+
+redis = smartninja_redis.from_url(os.environ.get('REDIS_URL'))
 
 
 @app.route("/")
@@ -74,22 +79,32 @@ def login():
 
 @app.route('/create-topic', methods=['GET', 'POST'])
 def topic_create():
+    session_token = request.cookies.get('session_token')
+    user = db.query(User).filter_by(session_token=session_token).first()
+
+    if not user:
+        return redirect(url_for('login'))
+
     if request.method == 'GET':
-        return render_template('topic_create.html')
+        csrf_token = str(uuid.uuid4())
+
+        redis.set(name=csrf_token, value=user.username)
+
+        return render_template('topic_create.html', user=user, csrf_token=csrf_token)
 
     elif request.method == 'POST':
-        title = request.form.get('title')
-        text = request.form.get('text')
+        csrf = request.form.get('csrf')
+        redis_csrf_username = redis.get(name=csrf).decode()
 
-        session_token = request.cookies.get('session_token')
-        user = db.query(User).filter_by(session_token=session_token).first()
+        if redis_csrf_username and redis_csrf_username == user.username:
+            title = request.form.get('title')
+            text = request.form.get('text')
 
-        if not user:
-            return redirect(url_for('login '))
+            topic = Topic.create(title=title, text=text, author=user)
 
-        topic = Topic.create(title=title, text=text, author=user)
-
-        return redirect(url_for('index'))
+            return redirect(url_for('index'))
+        else:
+            return 'CSRF token is not valid!'
 
 
 @app.route('/topic/<topic_id>', methods=['GET'])

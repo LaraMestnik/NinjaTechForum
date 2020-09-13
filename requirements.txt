@@ -2,3 +2,4 @@ Flask==1.1.2
 psycopg2
 sqla-wrapper
 gunicorn>=19.9.0
+smartninja-redis
