@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, request, redirect, url_for
 from models.settings import db
 from models.user import User
 from models.topic import Topic
+from models.comment import Comment
 
 from utils.redis_helper import create_csrf_token, validate_csrf
 
@@ -53,7 +54,9 @@ def topic_details(topic_id):
     session_token = request.cookies.get("session_token")
     user = db.query(User).filter_by(session_token=session_token).first()
 
-    return render_template('topic/topic_details.html', topic=topic, user=user)
+    comments = db.query(Comment).filter_by(topic=topic).all()
+
+    return render_template('topic/topic_details.html', topic=topic, user=user, csrf_token=create_csrf_token(user.username), comments=comments)
 
 
 @topic_handlers.route("/topic/<topic_id>/edit", methods=['GET', 'POST'])
