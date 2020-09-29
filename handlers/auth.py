@@ -15,13 +15,14 @@ def signup():
 
     elif request.method == "POST":
         username = request.form.get("username")
+        email_address = request.form.get("email-address")
         password = request.form.get("password")
         repeat = request.form.get("repeat")
 
         if password != repeat:
             return "Passwords don't match! Try again."
 
-        user = User(username=username, password_hash=hashlib.sha256(password.encode()).hexdigest(), session_token=str(uuid.uuid4()))
+        user = User(username=username, password_hash=hashlib.sha256(password.encode()).hexdigest(), session_token=str(uuid.uuid4()), email_address=email_address)
         db.add(user)
         db.commit()
 
